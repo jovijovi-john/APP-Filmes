@@ -1,71 +1,38 @@
-import React, { Component } from "react";
-import { 
-  View, 
-  StyleSheet, 
-  Text,
-  Image,
-  TouchableOpacity,
-  TextInput,
-  Keyboard,
-  FlatList,
-  Button,
-  Modal,
-  ActivityIndicator
-} from "react-native";
+import React from "react";
 
-import api from "./src/services/api";
-import Filmes from "./src/Filmes";
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
-class App extends Component {
+import Home from "./src/pages/Home";
+import Sobre from "./src/pages/Sobre";
 
-  constructor(props){
-    super(props);
-    this.state = {
-      filmes: [],
-      loading: true
-    };
-  }
+const Stack = createNativeStackNavigator();
 
-  async componentDidMount(){
-    const response = await api.get("r-api/?api=filmes")
+export default function App(){
+  return(
+    <NavigationContainer>
+      <Stack.Navigator>
 
-    this.setState({
-      filmes: response.data,
-      loading: false
-    })
-  }
+        <Stack.Screen 
+          name="Home"
+          component={Home}
+          options={{
+            title: "Tela início",
+            headerStyle: {
+              backgroundColor: "#121212"
+            },
+            
+            headerTintColor: "#fff",
+            headerShown: false
+          }}
+        />
 
-  render() {
-
-    if (this.state.loading) {
-      return(
-        <View style={{alignItems: "center", justifyContent: "center", flex: 1}}>
-          <ActivityIndicator color={"#09A6FF"} size={40} />
-        </View>
-      )
-    } else {
-      return(
-        <View style={styles.container}>
-            <FlatList 
-              style={styles} 
-              data={this.state.filmes} 
-              keyExtractor={(item) => item.id.toString()}
-              renderItem={({item}) => <Filmes data={item}/>}
-            />
-        </View>
-      );
-    }
-  };
-};
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 30
-  },
-
-
-})
-
-export default App;
-
+        <Stack.Screen
+          name="Sobre"
+          component={Sobre}
+        />
+      
+      </Stack.Navigator>
+    </NavigationContainer>
+  )
+}
